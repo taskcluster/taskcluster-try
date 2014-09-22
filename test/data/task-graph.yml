@@ -1,0 +1,75 @@
+scopes:
+  - 'queue:*'
+tasks:
+  # A decision task
+  - taskId:           '{{ "decision-task" | as-slugid }}'
+    task:
+      provisionerId:  aws-provisioner
+      workerType:     v2
+      created:        '{{ now }}'
+      deadline:       '{{ "1 day 2 hours" | from-now }}'
+      payload:
+        image:        ubuntu:13.10
+        command:
+          - /bin/decide
+        env:
+          FLAGS:      '{{ comment }}'
+          REVISION:   '{{ revision }}'
+          PROJECT:    '{{ project }}'
+      metadata:
+        name:       "Make Decision based on flags"
+        description: |
+          Description of specific task...
+        owner:        '{{ owner }}'
+        source:       '{{ source }}'
+
+  # Build task that is independent of the decision task
+  - taskId:           '{{ "build-task" | as-slugid }}'
+    task:
+      provisionerId:  aws-provisioner
+      workerType:     v2
+      created:        '{{ now }}'
+      deadline:       '{{ "1 day 2 hours" | from-now }}'
+      payload:
+        image:        ubuntu:13.10
+        command:
+          - "/bin/bash"
+          - "-c"
+          - "echo \"Hello World\"; sleep 10; echo \"done\";"
+        maxRunTime:   600
+      metadata:
+        name:       "TaskA: Build something TaskB"
+        description: |
+          Description of specific task...
+        owner:        '{{ owner }}'
+        source:       '{{ source }}'
+
+  # Test task that depends on build task
+  - taskId:           '{{ "test-task" | as-slugid }}'
+    requires:
+      - '{{ "build-task" | as-slugid }}'
+    task:
+      provisionerId:  aws-provisioner
+      workerType:     v2
+      created:        '{{ now }}'
+      deadline:       '{{ "1 day 2 hours" | from-now }}'
+      payload:
+        image:        ubuntu:13.10
+        command:
+          - "/bin/bash"
+          - "-c"
+          - "echo \"Hello World\"; sleep 10; echo \"done\";"
+        maxRunTime:   600
+      metadata:
+        name:       "TaskA: Build something TaskB"
+        description: |
+          Description of specific task...
+        owner:        '{{ owner }}'
+        source:       '{{ source }}'
+
+metadata:
+  name:           "My Test TaskGraph"
+  description: |
+    Some description of the test task in **markdown**.
+  owner:        '{{ owner }}'
+  source:       '{{ source }}'

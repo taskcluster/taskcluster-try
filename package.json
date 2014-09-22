@@ -1,0 +1,31 @@
+{
+  "name":     "taskcluster-try",
+  "version":  "0.1.0",
+  "private":  true,
+  "main":     "bin/handlers.js",
+  "scripts": {
+    "test":   "test/runtests.sh"
+  },
+  "repository": {
+    "type":   "git",
+    "url":    "https://github.com/taskcluster/taskcluster-try.git"
+  },
+  "dependencies": {
+    "promise":                          "6.0.0",
+    "lodash":                           "2.4.1",
+    "debug":                            "2.0.0",
+    "taskcluster-client":               "0.15.5",
+    "taskcluster-base":                 "0.5.5",
+    "yamljs":                           "0.2.0",
+    "superagent":                       "0.18.2",
+    "superagent-promise":               "0.1.2",
+    "json-parameterization":            "0.1.0"
+  },
+  "devDependencies": {
+    "mocha":                            "1.21.4",
+    "slugid":                           "1.0.2"
+  },
+  "engines": {
+    "node":                             "0.10.x"
+  }
+}
