@@ -1,5 +1,5 @@
 scopes:
-  - 'queue:*'
+  - 'queue:define-task:aws-provisioner/v2'
 tasks:
   # A decision task
   - taskId:           '{{ "decision-task" | as-slugid }}'

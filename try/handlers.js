@@ -45,7 +45,8 @@ Handlers.prototype.setup = function() {
   // Create listener
   this.listener = new taskcluster.Listener({
     connectionString:   'amqps://public:public@pulse.mozilla.org?heartbeat=180',
-    queueName:          this.queueName
+    queueName:          this.queueName,
+    prefetch:           1 // Should 10 or so in production
   });
 
   // Construct list of projects
@@ -119,6 +120,8 @@ Handlers.prototype.onNewResultSet = function(message) {
         project:  message.payload.project,
         revision: message.payload.revision
       });
+
+      debug("Creating task-graph: %s", taskGraphId);
 
       // Create task-graph
       return that.scheduler.createTaskGraph(taskGraphId, taskGraph);
