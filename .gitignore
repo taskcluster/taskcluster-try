@@ -1,1 +1,2 @@
-taskcluster-try.conf.json
+/taskcluster-try.conf.json
+/node_modules/
