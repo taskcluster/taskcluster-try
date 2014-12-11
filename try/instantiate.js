@@ -81,7 +81,7 @@ var instantiate = function(template, options) {
                       return render(relativeTime(parseTime(text)).toJSON());
                     }
                   },
-    'as-slugid':  function() {
+    'as_slugid':  function() {
                     return function(label, render) {
                       var result = labelsToSlugids[label];
                       if (result === undefined) {

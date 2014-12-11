@@ -2,14 +2,14 @@ scopes:
   - 'queue:define-task:aws-provisioner/v2'
 tasks:
   # A decision task
-  - taskId:           '{{#as-slugid}}decision-task{{/as-slugid}}'
+  - taskId:           '{{#as_slugid}}decision-task{{/as_slugid}}'
     task:
       routes:
         - 'xyz.{{ project  }}.{{ revision_hash }}'
       provisionerId:  aws-provisioner
       workerType:     v2
       created:        '{{ now }}'
-      deadline:       '{{#from-now }}1 day 2 hours{{/from-now}}'
+      deadline:       '{{#from_now }}1 day 2 hours{{/from_now}}'
       payload:
         image:        ubuntu:13.10
         command:
@@ -26,12 +26,12 @@ tasks:
         source:       '{{ source }}'
 
   # Build task that is independent of the decision task
-  - taskId:           '{{#as-slugid }}build-task{{/as-slugid}}'
+  - taskId:           '{{#as_slugid }}build-task{{/as_slugid}}'
     task:
       provisionerId:  aws-provisioner
       workerType:     v2
       created:        '{{ now }}'
-      deadline:       '{{#from-now }}1 day 2 hours{{/from-now}}'
+      deadline:       '{{#from_now }}1 day 2 hours{{/from_now}}'
       payload:
         image:        ubuntu:13.10
         command:
@@ -47,14 +47,14 @@ tasks:
         source:       '{{ source }}'
 
   # Test task that depends on build task
-  - taskId:           '{{#as-slugid }}test-task{{/as-slugid}}'
+  - taskId:           '{{#as_slugid }}test-task{{/as_slugid}}'
     requires:
-      - '{{#as-slugid }}build-task{{/as-slugid}}'
+      - '{{#as_slugid }}build-task{{/as_slugid}}'
     task:
       provisionerId:  aws-provisioner
       workerType:     v2
       created:        '{{ now }}'
-      deadline:       '{{#from-now }}1 day 2 hours{{/from-now}}'
+      deadline:       '{{#from_now }}1 day 2 hours{{/from_now}}'
       payload:
         image:        ubuntu:13.10
         command:
