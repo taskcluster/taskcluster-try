@@ -14,12 +14,12 @@
     "promise":                          "6.0.0",
     "lodash":                           "2.4.1",
     "debug":                            "2.0.0",
-    "taskcluster-client":               "0.15.5",
+    "taskcluster-client":               "0.17.0",
     "taskcluster-base":                 "0.5.5",
     "yamljs":                           "0.2.0",
     "superagent":                       "0.18.2",
     "superagent-promise":               "0.1.2",
-    "json-parameterization":            "0.1.0"
+    "mustache":                         "0.8.2"
   },
   "devDependencies": {
     "mocha":                            "1.21.4",

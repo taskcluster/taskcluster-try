@@ -87,7 +87,7 @@ suite('instantiate', function() {
     // Do a little smoke testing
     assert(taskGraph.metadata);
     assert(taskGraph.metadata.owner === 'user@example.com');
-    assert(taskGraph.tasks[0].routes.indexOf('xyz.try.RESULTSET') !== -1);
+    assert(taskGraph.tasks[0].task.routes.indexOf('xyz.try.RESULTSET') !== -1);
     assert(taskGraph.tasks.length === 3);
     assert(taskGraph.tasks[1].taskId === taskGraph.tasks[2].requires[0]);
 

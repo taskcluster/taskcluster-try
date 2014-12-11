@@ -2,7 +2,7 @@ var assert        = require('assert');
 var yaml          = require('yamljs');
 var _             = require('lodash');
 var slugid        = require('slugid');
-var parameterize  = require('json-parameterization');
+var mustache      = require('mustache');
 
 // Regular expression matching: X days Y hours Z minutes
 var timeExp = /^(\s*(\d+)\s*d(ays?)?)?(\s*(\d+)\s*h(ours?)?)?(\s*(\d+)\s*m(in(utes?)?)?)?\s*$/;
@@ -67,29 +67,33 @@ var instantiate = function(template, options) {
   // Create label cache, so we provide the same slugids for the same label
   var labelsToSlugids = {};
 
-  // Parse template
-  template = yaml.parse(template);
-
   // Parameterize template
-  return parameterize(template, {
-    'now':             new Date().toJSON(),
-    'owner':           options.owner,
-    'source':          options.source,
-    'revision':        options.revision,
-    'comment':         options.comment,
-    'project':         options.project,
+  template = mustache.render(template, {
+    'now':        new Date().toJSON(),
+    'owner':      options.owner,
+    'source':     options.source,
+    'revision':   options.revision,
+    'comment':    options.comment,
+    'project':    options.project,
     'revision_hash':   options.revision_hash,
-    'from-now':   function(text) {
-                    return relativeTime(parseTime(text)).toJSON();
-                  },
-    'as-slugid':  function(label) {
-                    var result = labelsToSlugids[label];
-                    if (result === undefined) {
-                      result = labelsToSlugids[label] = slugid.v4();
+    'from-now':   function() {
+                    return function(text, render) {
+                      return render(relativeTime(parseTime(text)).toJSON());
                     }
-                    return result;
+                  },
+    'as-slugid':  function() {
+                    return function(label, render) {
+                      var result = labelsToSlugids[label];
+                      if (result === undefined) {
+                        result = labelsToSlugids[label] = slugid.v4();
+                      }
+                      return render(result);
+                    }
                   }
   });
+
+  // Parse template
+  return yaml.parse(template);
 };
 
 // Export parseTime
