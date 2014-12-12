@@ -114,11 +114,12 @@ Handlers.prototype.onNewResultSet = function(message) {
 
       // Instantiate task-graph
       var taskGraph = instantiate(res.text, {
-        owner:    message.payload.author,
-        source:   url,
-        comment:  message.payload.comments,
-        project:  message.payload.project,
-        revision: message.payload.revision
+        owner:         message.payload.author,
+        source:        url,
+        comment:       message.payload.comments,
+        project:       message.payload.project,
+        revision:      message.payload.revision,
+        revision_hash: message.payload.revision_hash
       });
 
       debug("Creating task-graph: %s", taskGraphId);

@@ -3,6 +3,8 @@ scopes:
 tasks:
   # A decision task
   - taskId:           '{{ "decision-task" | as-slugid }}'
+    routes:
+      - 'xyz.{{ project  }}.{{ revision_hash }}'
     task:
       provisionerId:  aws-provisioner
       workerType:     v2
