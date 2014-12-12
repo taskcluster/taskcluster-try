@@ -14,6 +14,7 @@ the following parameters:
   * `owner`, email for the author of the push,
   * `source`, url to the taskgraph.yml,
   * `revision`, revision identifier of the push,
+  * `revision_hash`, identifier of treeherder resultset
   * `comment`, comment from the most recent revision pushed,
   * `project`, treeherder project this was pushed for,
   * `from-now`, modifier that converts relative time to JSON date-time,

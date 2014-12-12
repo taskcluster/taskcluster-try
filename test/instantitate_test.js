@@ -76,16 +76,18 @@ suite('instantiate', function() {
     });
 
     var taskGraph = instantiate(input, {
-      owner:      'user@example.com',
-      source:     'http://localhost/unit-test',
-      comment:    "try: something...",
-      project:    "try",
-      revision:   'REVISION'
+      owner:         'user@example.com',
+      source:        'http://localhost/unit-test',
+      comment:       "try: something...",
+      project:       "try",
+      revision:      'REVISION',
+      revision_hash: 'RESULTSET'
     });
 
     // Do a little smoke testing
     assert(taskGraph.metadata);
     assert(taskGraph.metadata.owner === 'user@example.com');
+    assert(taskGraph.tasks[0].routes.indexOf('xyz.try.RESULTSET') !== -1);
     assert(taskGraph.tasks.length === 3);
     assert(taskGraph.tasks[1].taskId === taskGraph.tasks[2].requires[0]);
 
@@ -116,7 +118,7 @@ suite('instantiate', function() {
     // Create taskGraphId
     var taskGraphId = slugid.v4();
 
-    debug("Creating taskGraphId: %s", taskGraphId)
+    debug("Creating taskGraphId: %s", taskGraphId);
     return scheduler.createTaskGraph(taskGraphId, taskGraph);
   });
 });

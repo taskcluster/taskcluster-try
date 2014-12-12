@@ -40,11 +40,12 @@ var relativeTime = function(time, to) {
  *
  * options:
  * {
- *   owner:     'user@exmaple.com',   // Owner emails
- *   source:    'http://...'          // Source file this was instantiated from
- *   revision:  '...',                // Revision hash string
- *   comment:   'try: ...',           // Latest commit comment
- *   project:   'try',                // Treeherder project name
+ *   owner:         'user@exmaple.com',  // Owner emails
+ *   source:        'http://...'         // Source file this was instantiated from
+ *   revision:      '...',               // Revision hash string
+ *   comment:       'try: ...',          // Latest commit comment
+ *   project:       'try',               // Treeherder project name
+ *   revision_hash: '...',               // Revision hash for treeherder resultset
  * }
  *
  * In in addition to options provided above the following paramters is available
@@ -56,11 +57,12 @@ var relativeTime = function(time, to) {
  */
 var instantiate = function(template, options) {
   // Validate options
-  assert(options.owner,     "options.owner is required");
-  assert(options.source,    "options.source is required");
-  assert(options.revision,  "options.revision is required");
-  assert(options.comment,   "options.comment is required");
-  assert(options.project,   "options.owner is required");
+  assert(options.owner,          "options.owner is required");
+  assert(options.source,         "options.source is required");
+  assert(options.revision,       "options.revision is required");
+  assert(options.comment,        "options.comment is required");
+  assert(options.project,        "options.owner is required");
+  assert(options.revision_hash,  "options.revision_hash is required");
 
   // Create label cache, so we provide the same slugids for the same label
   var labelsToSlugids = {};
@@ -70,12 +72,13 @@ var instantiate = function(template, options) {
 
   // Parameterize template
   return parameterize(template, {
-    'now':        new Date().toJSON(),
-    'owner':      options.owner,
-    'source':     options.source,
-    'revision':   options.revision,
-    'comment':    options.comment,
-    'project':    options.project,
+    'now':             new Date().toJSON(),
+    'owner':           options.owner,
+    'source':          options.source,
+    'revision':        options.revision,
+    'comment':         options.comment,
+    'project':         options.project,
+    'revision_hash':   options.revision_hash,
     'from-now':   function(text) {
                     return relativeTime(parseTime(text)).toJSON();
                   },
