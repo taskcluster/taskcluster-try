@@ -1,15 +1,16 @@
 scopes:
   - 'queue:define-task:aws-provisioner/v2'
+  - 'queue:route:xyz.{{ project  }}.{{ revision_hash }}'
 tasks:
   # A decision task
-  - taskId:           '{{ "decision-task" | as-slugid }}'
-    routes:
-      - 'xyz.{{ project  }}.{{ revision_hash }}'
+  - taskId:           '{{#as_slugid}}decision-task{{/as_slugid}}'
     task:
+      routes:
+        - 'xyz.{{ project  }}.{{ revision_hash }}'
       provisionerId:  aws-provisioner
       workerType:     v2
       created:        '{{ now }}'
-      deadline:       '{{ "1 day 2 hours" | from-now }}'
+      deadline:       '{{#from_now }}1 day 2 hours{{/from_now}}'
       payload:
         image:        ubuntu:13.10
         command:
@@ -23,15 +24,15 @@ tasks:
         description: |
           Description of specific task...
         owner:        '{{ owner }}'
-        source:       '{{ source }}'
+        source:       '{{{ source }}}'
 
   # Build task that is independent of the decision task
-  - taskId:           '{{ "build-task" | as-slugid }}'
+  - taskId:           '{{#as_slugid }}build-task{{/as_slugid}}'
     task:
       provisionerId:  aws-provisioner
       workerType:     v2
       created:        '{{ now }}'
-      deadline:       '{{ "1 day 2 hours" | from-now }}'
+      deadline:       '{{#from_now }}1 day 2 hours{{/from_now}}'
       payload:
         image:        ubuntu:13.10
         command:
@@ -44,17 +45,17 @@ tasks:
         description: |
           Description of specific task...
         owner:        '{{ owner }}'
-        source:       '{{ source }}'
+        source:       '{{{ source }}}'
 
   # Test task that depends on build task
-  - taskId:           '{{ "test-task" | as-slugid }}'
+  - taskId:           '{{#as_slugid }}test-task{{/as_slugid}}'
     requires:
-      - '{{ "build-task" | as-slugid }}'
+      - '{{#as_slugid }}build-task{{/as_slugid}}'
     task:
       provisionerId:  aws-provisioner
       workerType:     v2
       created:        '{{ now }}'
-      deadline:       '{{ "1 day 2 hours" | from-now }}'
+      deadline:       '{{#from_now }}1 day 2 hours{{/from_now}}'
       payload:
         image:        ubuntu:13.10
         command:
@@ -67,11 +68,11 @@ tasks:
         description: |
           Description of specific task...
         owner:        '{{ owner }}'
-        source:       '{{ source }}'
+        source:       '{{{ source }}}'
 
 metadata:
   name:           "My Test TaskGraph"
   description: |
     Some description of the test task in **markdown**.
   owner:        '{{ owner }}'
-  source:       '{{ source }}'
+  source:       '{{{ source }}}'

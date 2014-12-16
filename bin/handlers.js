@@ -22,16 +22,22 @@ var launch = function(profile) {
     filename:     'taskcluster-try'
   });
 
-  // Create InfluxDB connection for submitting statistics
-  var influx = new base.stats.Influx({
-    connectionString:   cfg.get('influx:connectionString'),
-    maxDelay:           cfg.get('influx:maxDelay'),
-    maxPendingPoints:   cfg.get('influx:maxPendingPoints')
-  });
+  var drain;
+  if (cfg.get('influx:connectionString')) {
+    // Create InfluxDB connection for submitting statistics
+    drain = new base.stats.Influx({
+      connectionString:   cfg.get('influx:connectionString'),
+      maxDelay:           cfg.get('influx:maxDelay'),
+      maxPendingPoints:   cfg.get('influx:maxPendingPoints')
+    });
+  } else {
+    drain = new base.stats.NullDrain();
+  }
+
 
   // Start monitoring the process
   base.stats.startProcessUsageReporting({
-    drain:        influx,
+    drain:        drain,
     component:    cfg.get('try:statsComponent'),
     process:      'handlers'
   });
@@ -39,8 +45,7 @@ var launch = function(profile) {
   // Create scheduler client
   var scheduler = new taskcluster.Scheduler({
     credentials:      cfg.get('taskcluster:credentials'),
-    baseUrl:          cfg.get('taskcluster:schedulerBaseUrl'),
-    authorizedScopes: cfg.get('try:scopes')
+    baseUrl:          cfg.get('taskcluster:schedulerBaseUrl')
   });
 
   // Create event handlers
@@ -49,13 +54,19 @@ var launch = function(profile) {
                         'new-result-set',
     branches:           cfg.get('try:branches'),
     scheduler:          scheduler,
-    queueName:          cfg.get('try:listenerQueueName'),
-    drain:              influx,
+    drain:              drain,
     component:          cfg.get('try:statsComponent')
   });
 
+  // Create listener
+  var listener = new taskcluster.PulseListener({
+    credentials:        cfg.get('pulse'),
+    queueName:          cfg.get('try:listenerQueueName'),
+    prefetch:           cfg.get('try:listenerPrefetch')
+  })
+
   // Start listening for events and handle them
-  return handlers.setup().then(function() {
+  return handlers.setup(listener).then(function() {
     debug('Handlers are now listening for events');
 
     // Notify parent process, so that this worker can run using LocalApp
