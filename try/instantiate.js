@@ -76,7 +76,7 @@ var instantiate = function(template, options) {
     'comment':    options.comment,
     'project':    options.project,
     'revision_hash':   options.revision_hash,
-    'from-now':   function() {
+    'from_now':   function() {
                     return function(text, render) {
                       return render(relativeTime(parseTime(text)).toJSON());
                     }

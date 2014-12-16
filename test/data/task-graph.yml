@@ -1,5 +1,6 @@
 scopes:
   - 'queue:define-task:aws-provisioner/v2'
+  - 'queue:route:xyz.{{ project  }}.{{ revision_hash }}'
 tasks:
   # A decision task
   - taskId:           '{{#as_slugid}}decision-task{{/as_slugid}}'
@@ -23,7 +24,7 @@ tasks:
         description: |
           Description of specific task...
         owner:        '{{ owner }}'
-        source:       '{{ source }}'
+        source:       '{{{ source }}}'
 
   # Build task that is independent of the decision task
   - taskId:           '{{#as_slugid }}build-task{{/as_slugid}}'
@@ -44,7 +45,7 @@ tasks:
         description: |
           Description of specific task...
         owner:        '{{ owner }}'
-        source:       '{{ source }}'
+        source:       '{{{ source }}}'
 
   # Test task that depends on build task
   - taskId:           '{{#as_slugid }}test-task{{/as_slugid}}'
@@ -67,11 +68,11 @@ tasks:
         description: |
           Description of specific task...
         owner:        '{{ owner }}'
-        source:       '{{ source }}'
+        source:       '{{{ source }}}'
 
 metadata:
   name:           "My Test TaskGraph"
   description: |
     Some description of the test task in **markdown**.
   owner:        '{{ owner }}'
-  source:       '{{ source }}'
+  source:       '{{{ source }}}'
