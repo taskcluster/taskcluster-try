@@ -31,23 +31,17 @@ var Handlers = function(options) {
   this.exchange         = options.exchange;
   this.branches         = options.branches;
   this.scheduler        = options.scheduler;
-  this.queueName        = options.queueName;  // Optional
   this.drain            = options.drain;
   this.component        = options.component;
   this.listener         = null;
 };
 
 /** Setup handlers and start listening */
-Handlers.prototype.setup = function() {
+Handlers.prototype.setup = function(listener) {
   assert(this.listener === null, "Cannot setup twice!");
   var that = this;
 
-  // Create listener
-  this.listener = new taskcluster.Listener({
-    connectionString:   'amqps://public:public@pulse.mozilla.org?heartbeat=180',
-    queueName:          this.queueName,
-    prefetch:           1 // Should 10 or so in production
-  });
+  this.listener = listener;
 
   // Construct list of projects
   var projects = _.keys(this.branches);

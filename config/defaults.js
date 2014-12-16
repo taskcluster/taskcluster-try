@@ -4,22 +4,30 @@ module.exports = {
     // Name of AMQP queue, if a non-exclusive queue is to be used.
     listenerQueueName:            undefined,
 
+    // Concurrent messages to handle.
+    listenerPrefetch:             1,
+
     // Component name in statistics
     statsComponent:               'try',
 
     // Mapping from projects to patterns for fetching task-graph.yml
     branches: {
-      'try':              'https://hg.mozilla.org/try/raw-file/<rev>/taskgraph.yml'
+      'try': 'https://hg.mozilla.org/try/raw-file/<rev>/testing/taskcluster/tasks/decision/try.yml'
     },
 
     // Treeherder exchange prefix
-    treeherderExchangePrefix:     'exchange/treeherder/v1/',
+    treeherderExchangePrefix:     'exchange/treeherder-stage/v1/',
 
     // Scopes tasks should be able to be created with
     scopes: [
       'scheduler:create-task-graph',
       'queue:*'
     ]
+  },
+
+  pulse: {
+    username: process.env.PULSE_USERNAME,
+    password: process.env.PULSE_PASSWORD
   },
 
   // Configuration of access to other taskcluster components
@@ -34,8 +42,8 @@ module.exports = {
     // 'auth:credentials', try.scopes
     // (typically configured using environment variables)
     credentials: {
-      clientId:                   undefined,
-      accessToken:                undefined
+      clientId:                   process.env['TASKCLUSTER_CLIENT_ID'],
+      accessToken:                process.env['TASKCLUSTER_ACCESS_TOKEN']
     }
   },
 
