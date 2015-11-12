@@ -1,3 +1,8 @@
+# DEPRECATED
+
+The code in this repository is not in use.
+The connection between pushes to Mozilla repositories and TaskCluster tasks is in [`mozilla-taskcluster`](https://github.com/taskcluster/mozilla-taskcluster) instead.
+
 TaskCluster Try
 ===============
 
